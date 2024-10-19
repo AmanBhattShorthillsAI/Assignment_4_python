@@ -13,13 +13,13 @@ class ExtractData():
     def checkForExtension(self, file_path):
         if file_path.endswith(".pdf"):
             loader = PDFLoader()
-            extractor = PDFExtractor(loader)
+            extractor = PDFExtractor(loader, self.file_path)
         elif file_path.endswith(".docx"):
             loader = DOCXLoader()
-            extractor = DOCXExtractor(loader)
+            extractor = DOCXExtractor(loader, self.file_path)
         elif file_path.endswith(".pptx") or file_path.endswith(".ppt"):
             loader = PPTLoader()
-            extractor = PPTXExtractor(loader)
+            extractor = PPTXExtractor(loader, self.file_path)
         else:
             raise ValueError("Unsupported file format. Use PDF, DOCX, or PPTX.") 
         
@@ -29,9 +29,6 @@ class ExtractData():
     def extractData(self):
         # check for extension
         extractor = self.checkForExtension(self.file_path)
-
-        # Extract texts
-        extractor.load(self.file_path)
         
         #extract texts 
         extracted_text = extractor.extract_text()

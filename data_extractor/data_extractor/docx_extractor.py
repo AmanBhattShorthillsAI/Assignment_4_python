@@ -1,28 +1,23 @@
 from typing import Any, Dict, List
+
+import docx
 from data_extractor.data_extractor.extractor import Extractor
 
 class DOCXExtractor(Extractor):
-    def __init__(self, loader):
+    def __init__(self, loader, file_path):
         self.loader = loader
-        self.file = None
-        self.file_path = None
-        
-    def load(self, file_path):
-        """Load the file using the appropriate loader based on file type."""
         self.file = self.loader.load_file(file_path)
         self.file_path = file_path 
         
     def extract_text(self):
         # Extract text from DOCX
-            doc = self.loader.load_file(self.file_path)
             text = ""
-
             # Extract text from paragraphs
-            for paragraph in doc.paragraphs:
+            for paragraph in self.file.paragraphs:
                 text += paragraph.text + "\n"
 
             # Extract text from tables
-            for table in doc.tables:
+            for table in self.file.tables:
                 for row in table.rows:
                     row_text = "\t".join(cell.text.strip() for cell in row.cells)
                     text += row_text + "\n"
@@ -32,8 +27,7 @@ class DOCXExtractor(Extractor):
     def extract_images(self):
         images = []
         # DOCX image extraction
-        doc = self.loader.load_file(self.file_path)
-        for rel in doc.part.rels.values():
+        for rel in self.file.part.rels.values():
             if "image" in rel.target_ref:
                 image_blob = rel.target_part.blob
                 # Get the image extension
@@ -45,7 +39,6 @@ class DOCXExtractor(Extractor):
                         "ext": image_ext,
                         "page": rel.target_ref
                     })
-        doc = None  # Explicitly close the document
         return images
     
     def extract_urls(self) -> List[Dict[str, Any]]:
@@ -79,13 +72,10 @@ class DOCXExtractor(Extractor):
 
         return extracted_links
 
-
-
     def extract_tables(self):
         # Extract tables from DOCX
-        doc = self.loader.load_file(self.file_path)
         table_data = []
-        for table in doc.tables:
+        for table in self.file.tables:
             table_content = [[cell.text.strip() for cell in row.cells] for row in table.rows]
             table_data.append(table_content)
         return table_data

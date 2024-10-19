@@ -2,23 +2,17 @@ from typing import Any, Dict, List
 from data_extractor.data_extractor.extractor import Extractor
 
 class PPTXExtractor(Extractor):
-    def __init__(self, loader):
+    def __init__(self, loader, file_path):
         self.loader = loader
-        self.file = None
-        self.file_path = None
-        
-    def load(self, file_path):
-        """Load the file using the appropriate loader based on file type."""
         self.file = self.loader.load_file(file_path)
         self.file_path = file_path 
 
     def extract_text(self):
         # Extract text from PPTX
-        ppt = self.loader.load_file(self.file_path)
         text = ""
 
         # Extract text from shapes
-        for slide in ppt.slides:
+        for slide in self.file.slides:
             for shape in slide.shapes:
                 if hasattr(shape, "text"):
                     text += shape.text + "\n"
@@ -34,9 +28,8 @@ class PPTXExtractor(Extractor):
     def extract_images(self):
         images = []
         # PPTX image extraction
-        ppt = self.loader.load_file(self.file_path)
         # Extract images
-        for slide_num, slide in enumerate(ppt.slides):
+        for slide_num, slide in enumerate(self.file.slides):
             for shape in slide.shapes:
                 if shape.shape_type == 13:  # Picture type
                     image_stream = shape.image.blob
@@ -73,8 +66,7 @@ class PPTXExtractor(Extractor):
     def extract_tables(self):
         tables=[]
         # Extract tables from PPTX (typically tables are part of shapes)
-        ppt = self.loader.load_file(self.file_path)
-        for slide in ppt.slides:
+        for slide in self.file.slides:
             for shape in slide.shapes:
                 if shape.has_table:  # Check if the shape contains a table
                     table_content = []

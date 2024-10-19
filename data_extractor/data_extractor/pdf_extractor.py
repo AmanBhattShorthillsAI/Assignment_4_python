@@ -4,13 +4,8 @@ import pdfplumber
 from data_extractor.data_extractor.extractor import Extractor
 
 class PDFExtractor(Extractor):
-    def __init__(self, loader):
+    def __init__(self, loader, file_path):
         self.loader = loader
-        self.file = None
-        self.file_path = None
-
-    def load(self, file_path):
-        """Load the file using the appropriate loader based on file type."""
         self.file = self.loader.load_file(file_path)
         self.file_path = file_path 
 

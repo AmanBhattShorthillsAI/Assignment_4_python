@@ -42,7 +42,7 @@ class SaveData():
             file_storage.store(self.extracted_tables, os.path.basename(self.file_path), self.table_name_data_table)
 
         print(f"Extracted data saved to: {output_dir}")
-        
+
     def saveToSQLDatabase(self):
         # Create an instance of SQLStorage
         sql_storage = SQLStorage(self.database_name)
