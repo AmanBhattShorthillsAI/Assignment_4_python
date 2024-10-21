@@ -2,7 +2,12 @@ from data_extractor.storage.storage import Storage
 
 class SQLStorage(Storage):
     def __init__(self, database):
-        super().__init__(database)
+        if database is None:
+            raise ValueError("Database path cannot be None")
+        elif database == 'assignment4.db':
+            super().__init__(database)
+        else:
+            raise ValueError("Invalid database path")
 
     def store(self, table_name, data, filename):
         """

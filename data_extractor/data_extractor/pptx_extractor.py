@@ -5,7 +5,12 @@ class PPTXExtractor(Extractor):
     def __init__(self, loader, file_path):
         self.loader = loader
         self.file = self.loader.load_file(file_path)
-        self.file_path = file_path 
+        self.file_path = file_path
+    
+    
+    # def __init__(self, file_path):
+    #     self.file = LoaderHelper(file_path, Presentation).load()
+    #     self.file_path = file_path
 
     def extract_text(self):
         # Extract text from PPTX

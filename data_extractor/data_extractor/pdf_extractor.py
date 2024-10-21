@@ -7,8 +7,12 @@ class PDFExtractor(Extractor):
     def __init__(self, loader, file_path):
         self.loader = loader
         self.file = self.loader.load_file(file_path)
-        self.file_path = file_path 
-
+        self.file_path = file_path
+    
+    # def __init__(self, file_path):
+    #     self.file = LoaderHelper(file_path, PdfReader).load()
+    #     self.file_path = file_path
+    
     def extract_text(self):
         # Extract text from PDF
         text = ""
@@ -29,12 +33,14 @@ class PDFExtractor(Extractor):
                 image_bytes = base_image["image"]
                 image_ext = base_image["ext"]
                 width, height = base_image["width"], base_image["height"]
-                images.append({
-                    "image_data": image_bytes,
-                    "ext": image_ext,
-                    "page": page_num + 1,
-                    "dimensions": (width, height)
-                })
+                images.append(
+                    {
+                        "image_data": image_bytes,
+                        "ext": image_ext,
+                        "page": page_num + 1,
+                        "dimensions": (width, height),
+                    }
+                )
         pdf_document.close()
         return images
 
@@ -43,18 +49,28 @@ class PDFExtractor(Extractor):
         extracted_links = []
         for page_num, page in enumerate(self.file.pages, start=1):
             # Extract annotations from the page
-            if '/Annots' in page:
-                annotations = page['/Annots']
+            if "/Annots" in page:
+                annotations = page["/Annots"]
                 for annot in annotations:
                     annot_obj = annot.get_object()  # Get the annotation object
                     # Check if the annotation object has the expected structure
-                    if '/A' in annot_obj and '/URI' in annot_obj['/A']:
-                        link = annot_obj['/A']['/URI']
-                        extracted_links.append({                            
-                            "linked_text": link,  # You can also extract the text if needed
-                            "url": link,
-                            "page_number": page_num
-                        })
+                    if "/A" in annot_obj and "/URI" in annot_obj["/A"]:
+                        link = annot_obj["/A"]["/URI"]
+                        # Get the display text of the hyperlink
+                        display_text = ""
+                        if "/Contents" in annot_obj:
+                            display_text = annot_obj["/Contents"].decode("utf-8")
+                        else:
+                            display_text = (
+                                link.title()
+                            )  # Use the link title as a fallback
+                        extracted_links.append(
+                            {
+                                "linked_text": display_text,  # Display text of the hyperlink
+                                "url": link,
+                                "page_number": page_num,
+                            }
+                        )
         return extracted_links
 
     def extract_tables(self):

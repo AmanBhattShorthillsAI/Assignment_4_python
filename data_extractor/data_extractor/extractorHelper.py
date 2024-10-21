@@ -5,7 +5,6 @@ from data_extractor.file_loaders.docx_loader import DOCXLoader
 from data_extractor.file_loaders.pdf_loader import PDFLoader
 from data_extractor.file_loaders.ppt_loader import PPTLoader
 
-
 class ExtractData():
     def __init__(self, file_path):
         self.file_path = file_path
@@ -14,12 +13,24 @@ class ExtractData():
         if file_path.endswith(".pdf"):
             loader = PDFLoader()
             extractor = PDFExtractor(loader, self.file_path)
+            
+            # extractor = PDFExtractor(self.file_path)
+            
+            
         elif file_path.endswith(".docx"):
             loader = DOCXLoader()
             extractor = DOCXExtractor(loader, self.file_path)
+            
+            # extractor = DOCXExtractor(self.file_path)
+            
+            
         elif file_path.endswith(".pptx") or file_path.endswith(".ppt"):
             loader = PPTLoader()
             extractor = PPTXExtractor(loader, self.file_path)
+
+            # extractor = PPTXExtractor(self.file_path)
+            
+            
         else:
             raise ValueError("Unsupported file format. Use PDF, DOCX, or PPTX.") 
         

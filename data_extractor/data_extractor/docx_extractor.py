@@ -1,17 +1,21 @@
 from typing import Any, Dict, List
-
-import docx
 from data_extractor.data_extractor.extractor import Extractor
 
 class DOCXExtractor(Extractor):
     def __init__(self, loader, file_path):
         self.loader = loader
         self.file = self.loader.load_file(file_path)
-        self.file_path = file_path 
+        self.file_path = file_path
+    
+    
+    # def __init__(self, file_path):
+    #     self.file = LoaderHelper(file_path, Document).load()
+    #     self.file_path = file_path
         
     def extract_text(self):
         # Extract text from DOCX
             text = ""
+            
             # Extract text from paragraphs
             for paragraph in self.file.paragraphs:
                 text += paragraph.text + "\n"

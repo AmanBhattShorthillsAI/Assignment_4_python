@@ -1,8 +1,8 @@
 import os
 import json
-import pandas as pd  # For saving tables as CSV
 from io import BytesIO
 from PIL import Image as PILImage
+from pandas import DataFrame
 from data_extractor.storage.storage import Storage  # For handling PPTX images
 
 class FileStorage(Storage):
@@ -106,7 +106,7 @@ class FileStorage(Storage):
             csv_path = os.path.join(tables_dir, csv_filename)
             
             # Save table data to CSV file
-            if isinstance(table, pd.DataFrame):
+            if isinstance(table, DataFrame):
                 table.to_csv(csv_path, index=False)
             elif isinstance(table, list):
                 with open(csv_path, 'w', newline='') as f:
