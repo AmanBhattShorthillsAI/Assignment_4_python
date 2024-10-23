@@ -7,7 +7,6 @@ class LoaderHelper():
         try:
             # Attempt to load the file
             file = self.object(self.file_path)
-            # checkForEncryption(file)
             return file
         except Exception:
             # Catch any exception related to loading the file and raise the expected error

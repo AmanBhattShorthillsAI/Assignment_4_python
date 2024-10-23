@@ -7,7 +7,6 @@ class DOCXExtractor(Extractor):
         self.file = self.loader.load_file(file_path)
         self.file_path = file_path
     
-    
     # def __init__(self, file_path):
     #     self.file = LoaderHelper(file_path, Document).load()
     #     self.file_path = file_path

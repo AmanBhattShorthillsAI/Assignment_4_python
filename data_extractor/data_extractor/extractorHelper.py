@@ -1,61 +1,34 @@
-from data_extractor.data_extractor.docx_extractor import DOCXExtractor
-from data_extractor.data_extractor.pdf_extractor import PDFExtractor
-from data_extractor.data_extractor.pptx_extractor import PPTXExtractor
-from data_extractor.file_loaders.docx_loader import DOCXLoader
-from data_extractor.file_loaders.pdf_loader import PDFLoader
-from data_extractor.file_loaders.ppt_loader import PPTLoader
+from data_extractor.data_extractor.iterator import FileExtractorIterator
 
 class ExtractData():
     def __init__(self, file_path):
         self.file_path = file_path
-        
-    def checkForExtension(self, file_path):
-        if file_path.endswith(".pdf"):
-            loader = PDFLoader()
-            extractor = PDFExtractor(loader, self.file_path)
-            
-            # extractor = PDFExtractor(self.file_path)
-            
-            
-        elif file_path.endswith(".docx"):
-            loader = DOCXLoader()
-            extractor = DOCXExtractor(loader, self.file_path)
-            
-            # extractor = DOCXExtractor(self.file_path)
-            
-            
-        elif file_path.endswith(".pptx") or file_path.endswith(".ppt"):
-            loader = PPTLoader()
-            extractor = PPTXExtractor(loader, self.file_path)
-
-            # extractor = PPTXExtractor(self.file_path)
-            
-            
-        else:
-            raise ValueError("Unsupported file format. Use PDF, DOCX, or PPTX.") 
-        
-        # return the appropriate extractor
-        return extractor
-
+    
     def extractData(self):
-        # check for extension
-        extractor = self.checkForExtension(self.file_path)
+        # get the file type
+        file_iterator = FileExtractorIterator(self.file_path)
+        
+        try:
+            extractor = next(file_iterator)
+            # Use the extractor as needed
+        except StopIteration:
+            raise ValueError("Unsupported file format. Use PDF, DOCX, or PPTX.")
         
         #extract texts 
         extracted_text = extractor.extract_text()
 
-        # Extract images (if available)
-        images = extractor.extract_images()
+        # Extract images
+        extracted_images = extractor.extract_images()
         
         # Extract URLs
-        urls = extractor.extract_urls()
+        extracted_urls = extractor.extract_urls()
 
         # Extract tables
-        tables = extractor.extract_tables()
+        extractor_tables = extractor.extract_tables()
         
         # return a dictionary of items extracted
         return {
             "text": extracted_text,
-            "images": images,
-            "urls": urls,
-            "tables": tables}
+            "images": extracted_images,
+            "urls": extracted_urls,
+            "tables": extractor_tables}
