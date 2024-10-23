@@ -8,7 +8,7 @@ from data_extractor.file_loaders.ppt_loader import PPTLoader
 class ExtractData():
     def __init__(self, file_path):
         self.file_path = file_path
-        
+
     def get_extractor(self):
         # Manually create a list of supported extensions and their respective classes
         supported_extensions = {
@@ -26,8 +26,7 @@ class ExtractData():
                     extractor = extractor_class(loader, self.file_path)
                     return extractor
                 except Exception as e:
-                    print(f"Error initializing extractor for {self.file_path}: {e}")
-                    return None
+                    raise e
         
         raise ValueError(f"Unsupported file type: {self.file_path}")
     

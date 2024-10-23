@@ -5,9 +5,7 @@ from data_extractor.data_extractor.extractor import Extractor
 
 class PDFExtractor(Extractor):
     def __init__(self, loader, file_path):
-        self.loader = loader
-        self.file = self.loader.load_file(file_path)
-        self.file_path = file_path
+        super().__init__(loader, file_path)
     
     # def __init__(self, file_path):
     #     self.file = LoaderHelper(file_path, PdfReader).load()
